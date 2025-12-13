@@ -1,16 +1,23 @@
-interface Note {
-	type: "note";
+export interface Text {
+	type: "Text";
 	id: string;
 	label: string;
 	content: string
+	tag?: Tag[];
 }
 
-interface Group {
-	type: "group";
+export interface Group {
+	type: "Group";
 	id: string;
 	name: string;
-	children: Array<Group | Note>
+	children: array<group | note>
 }
 
-type Node = Group | Note;
+export interface Tag {
+	type: "Tag";
+	id: string;
+	name: string;
+}
+
+export type Node = Group | Text;
 

@@ -27,7 +27,7 @@
 			console.log("Invalid JSON format for org");
 			return false;
 		} else {
-			console.log("Valid JSON")
+			console.log("Valid JSON");
 			return true;
 		}
 	}
@@ -35,7 +35,7 @@
 	function isNode(obj: any): obj is Node {
 		if (!obj || typeof obj !== "object") return false;
 
-		if (obj.type === "note") {
+		if (obj.type === "Note") {
 			return (
 				typeof obj.id === "string" &&
 				typeof obj.label === "string" &&
@@ -43,12 +43,19 @@
 			);
 		}
 
-		if (obj.type === "group") {
+		if (obj.type === "Group") {
 			return (
 				typeof obj.id === "string" &&
 				typeof obj.name === "string" &&
 				Array.isArray(obj.children) &&
 				obj.children.every(isNode)
+			);
+		}
+
+		if(obj.type === "Tag"){
+			return (
+				typeof obj.id === "string" &&
+				typeof obj.name === "string" &&
 			);
 		}
 
@@ -58,16 +65,22 @@
 
 <div class="flex flex-col w-screen h-screen justify-center items-center">
 	<HeaderLogo />
-	<div>
-		<Label class="p-5 flex justify-center font-bold text-lg"
-			>Import your json file</Label
-		>
-		<Input
-			type="file"
-			accept=".json"
-			class="text-center"
-			bind:files={fileInput}
-			onchange={handleUpload}
-		/>
+	<div class="flex-col flex space-y-5">
+		<button class="font-bold text-lg hover:underline text-center">
+			<a href="/new"> New JSON file </a>
+		</button>
+		<p class="text-center">or</p>
+		<div>
+			<Label class="flex justify-center font-bold text-lg"
+				>Import an existing JSON file for Org</Label
+			>
+			<Input
+				type="file"
+				accept=".json"
+				class="text-center"
+				bind:files={fileInput}
+				onchange={handleUpload}
+			/>
+		</div>
 	</div>
 </div>
