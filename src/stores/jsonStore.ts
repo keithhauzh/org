@@ -9,7 +9,7 @@ function findNodeById(nodes: Node[], id: string): Node | null {
 			const childResult = findNodeById(n.children, id);
 			if (childResult) return childResult
 		}
-	}
+	
 	return null;
 }
 
@@ -43,6 +43,8 @@ function createJsonStore() {
 
 	return {
 		subscribe,
+
+		replaceAll: (nodes;T)
 
 		// Text CRUD
 		addText: (t: Text) => update(arr => {
@@ -102,8 +104,8 @@ function createJsonStore() {
 		}),
 		validateTags: (textId: string, validIds: string[]) => {
 			const node = findNodeById(get(jsonStore), textId);
-			if(node && node.type === "Text" && node.tag) {
-				return node.tag.every(t=>validIds.includes(t.id));
+			if (node && node.type === "Text" && node.tag) {
+				return node.tag.every(t => validIds.includes(t.id));
 			}
 			return false
 		},

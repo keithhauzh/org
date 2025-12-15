@@ -2,10 +2,11 @@
 	import Input from "$lib/components/ui/input/input.svelte";
 	import Label from "$lib/components/ui/label/label.svelte";
 	import HeaderLogo from "$lib/header-logo.svelte";
+	import type { Node } from "$lib/types";
 
 	let fileInput: FileList | undefined;
 
-	async function handleUpload(event: Event) {
+	async function handleUpload() {
 		const file = fileInput?.[0];
 		if (!file) return;
 
@@ -15,27 +16,23 @@
 		try {
 			parsedJson = JSON.parse(text);
 			validateAndProcess(parsedJson);
+			console.log("success")
 		} catch {
 			console.log("Invalid JSON");
 			return;
 		}
 	}
 
-	function validateAndProcess(json: JSON): Boolean {
-		console.log(json);
-		if (!isNode(json)) {
-			console.log("Invalid JSON format for org");
-			return false;
-		} else {
-			console.log("Valid JSON");
-			return true;
-		}
+	function validateAndProcess(json: unknown): Node[] | null {
+		if (!Array.isArray(json))return null;
+		if (!json.every(isNode))return null;
+		return json;
 	}
 
 	function isNode(obj: any): obj is Node {
 		if (!obj || typeof obj !== "object") return false;
 
-		if (obj.type === "Note") {
+		if (obj.type === "Text") {
 			return (
 				typeof obj.id === "string" &&
 				typeof obj.label === "string" &&
@@ -52,13 +49,6 @@
 			);
 		}
 
-		if(obj.type === "Tag"){
-			return (
-				typeof obj.id === "string" &&
-				typeof obj.name === "string" &&
-			);
-		}
-
 		return false;
 	}
 </script>
@@ -71,7 +61,7 @@
 		</button>
 		<p class="text-center">or</p>
 		<div>
-			<Label class="flex justify-center font-bold text-lg"
+			<Label class="flex justify-center font-bold text-lg pb-3"
 				>Import an existing JSON file for Org</Label
 			>
 			<Input
