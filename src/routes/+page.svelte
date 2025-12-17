@@ -2,7 +2,9 @@
 	import Input from "$lib/components/ui/input/input.svelte";
 	import Label from "$lib/components/ui/label/label.svelte";
 	import HeaderLogo from "$lib/header-logo.svelte";
-	import type { Node } from "$lib/types";
+	import type { OrgNode } from "$lib/types";
+    import { parse } from "svelte/compiler";
+	import { jsonStore } from "../stores/jsonStore";
 
 	let fileInput: FileList | undefined;
 
@@ -15,24 +17,32 @@
 
 		try {
 			parsedJson = JSON.parse(text);
-			validateAndProcess(parsedJson);
-			console.log("success")
+			// console.log(parsedJson)
+			// console.log("Is array:", Array.isArray(parsedJson))
+			const validNodes = validateAndProcess(parsedJson);
+			if (validNodes) {
+				jsonStore.replaceAll(validNodes);
+			}else{
+				// console.log("Invalid JSON for org")
+			}
+			// console.log(validNodes);
 		} catch {
 			console.log("Invalid JSON");
 			return;
 		}
 	}
 
-	function validateAndProcess(json: unknown): Node[] | null {
-		if (!Array.isArray(json))return null;
-		if (!json.every(isNode))return null;
+	function validateAndProcess(json: unknown): OrgNode[] | null {
+		if (!Array.isArray(json)) return null;
+		if (json.length === 0) return null;
+		if (!json.every(isNode)) return null;
 		return json;
 	}
 
-	function isNode(obj: any): obj is Node {
+	function isNode(obj: any): obj is OrgNode {
 		if (!obj || typeof obj !== "object") return false;
 
-		if (obj.type === "Text") {
+		if (obj.type === "Bit") {
 			return (
 				typeof obj.id === "string" &&
 				typeof obj.label === "string" &&

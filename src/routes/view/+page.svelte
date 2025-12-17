@@ -1,6 +1,6 @@
 <script lang="ts">
 	import HeaderLogo from "$lib/header-logo.svelte";
-	import ViewTexts from "./ViewTexts.svelte";
+	import ViewTexts from "./ViewBits.svelte";
 	import ViewGroups from "./ViewGroups.svelte";
 	import ViewTags from "./ViewTags.svelte";
 	let viewWhat = "";

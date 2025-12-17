@@ -1,14 +1,15 @@
 <script lang="ts">
-	import { Input } from "$lib/components/ui/input";
-	import { Label } from "$lib/components/ui/label";
+  import { Input } from "$lib/components/ui/input";
+  import { Label } from "$lib/components/ui/label";
+  let { label = $bindable(), content = $bindable(), ...props } = $props();
 </script>
 
 <div class="w-full h-full flex-col flex px-25">
-	<Label class="w-full flex font-bold text-xl p-1">label</Label>
-	<Input class="w-full flex mb-10" />
-	<Label class="w-full flex font-bold text-xl p-1">content</Label>
-	<textarea
-		class="border-input
+  <Label class="w-full flex font-bold text-xl p-1">Label</Label>
+  <Input class="w-full flex mb-10" bind:value={label} />
+  <Label class="w-full flex font-bold text-xl p-1">Content</Label>
+  <textarea
+    class="border-input
     bg-background
     selection:bg-primary
     dark:bg-input/30
@@ -35,5 +36,7 @@
 	flex-1
 	overflow-auto
 	"
-	></textarea>
+    bind:value={content}
+  >
+  </textarea>
 </div>

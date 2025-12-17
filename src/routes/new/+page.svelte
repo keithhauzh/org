@@ -4,8 +4,16 @@
 	import { on } from "svelte/events";
 	import NewGroup from "./NewGroup.svelte";
 	import NewTag from "./NewTag.svelte";
-	import NewText from "./NewText.svelte";
+	import NewBit from "./NewBit.svelte";
+	import { jsonStore } from "../../stores/jsonStore";
+	import type { Bit, Group } from "$lib/types";
+	import { get } from "svelte/store";
 	let addWhat = "";
+
+	// child component variables
+	let label = "";
+	let content = "";
+	let name = "";
 
 	let off: () => void;
 
@@ -22,6 +30,43 @@
 			off();
 		};
 	});
+
+	function createBit(label: string, content: string) {
+		const bit: Bit = {
+			type: "Bit",
+			id: crypto.randomUUID(),
+			label,
+			content,
+		};
+		jsonStore.addBit(bit);
+	}
+
+	function createGroup(name: string) {
+		const group: Group = {
+			type: "Group",
+			id: crypto.randomUUID(),
+			name,
+			children: [],
+		};
+		jsonStore.addGroup(group);
+	}
+
+	function handleOnClick() {
+		// console.log("click")
+		switch (addWhat) {
+			case "bit":
+				createBit(label, content);
+				break;
+			case "group":
+				createGroup(name);
+				break;
+			case "group":
+				// createBit(label, content);
+				break;
+			default:
+				console.log("addWhat state is invalid");
+		}
+	}
 </script>
 
 <div class="h-screen w-screen flex flex-col justify-center items-center">
@@ -31,12 +76,12 @@
 	>
 		<button
 			onclick={() => {
-				addWhat = "text";
+				addWhat = "bit";
 			}}
 			class="font-bold"
 		>
 			<p class="text-gray-400">(1)</p>
-			<p class="font-bold hover:underline">text</p>
+			<p class="font-bold hover:underline">bit</p>
 		</button>
 		<button
 			onclick={() => {
@@ -60,7 +105,9 @@
 	<div class="w-full h-full px-30 pt-50 pb-30">
 		<div class="flex w-full">
 			<button
-				onclick={() => {}}
+				onclick={() => {
+					handleOnClick();
+				}}
 				class="ml-auto flex font-bold hover:underline"
 			>
 				create
@@ -68,8 +115,8 @@
 			<p class="text-gray-400 px-2">(CTRL + ENTER)</p>
 		</div>
 		<div class="w-full h-full bg-gray-50 p-10">
-			{#if addWhat == "text"}
-				<NewText />
+			{#if addWhat == "bit"}
+				<NewBit bind:label bind:content />
 			{:else if addWhat == "group"}
 				<NewGroup />
 			{:else if addWhat == "tag"}

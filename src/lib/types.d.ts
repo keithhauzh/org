@@ -1,5 +1,5 @@
-export interface Text {
-	type: "Text";
+export interface Bit {
+	type: "Bit";
 	id: string;
 	label: string;
 	content: string
@@ -10,7 +10,7 @@ export interface Group {
 	type: "Group";
 	id: string;
 	name: string;
-	children: array<group | note>
+	children: Array<Group | Bit>
 }
 
 export interface Tag {
@@ -19,5 +19,5 @@ export interface Tag {
 	name: string;
 }
 
-export type Node = Group | Text;
+export type OrgNode = Group | Bit;
 
